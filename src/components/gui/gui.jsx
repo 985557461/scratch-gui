@@ -5,7 +5,7 @@ import React from 'react';
 import {defineMessages, FormattedMessage, injectIntl, intlShape} from 'react-intl';
 import {connect} from 'react-redux';
 import MediaQuery from 'react-responsive';
-import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
+import {Tab, TabList, TabPanel, Tabs} from 'react-tabs';
 import tabStyles from 'react-tabs/style/react-tabs.css';
 import VM from 'scratch-vm';
 import Renderer from 'scratch-render';
@@ -39,6 +39,7 @@ import addExtensionIcon from './icon--extensions.svg';
 import codeIcon from './icon--code.svg';
 import costumesIcon from './icon--costumes.svg';
 import soundsIcon from './icon--sounds.svg';
+import LoginModal from '../login-modal/login-modal.jsx';
 
 const messages = defineMessages({
     addExtension: {
@@ -119,6 +120,7 @@ const GUIComponent = props => {
         telemetryModalVisible,
         tipsLibraryVisible,
         vm,
+        userIsLogin,
         ...componentProps
     } = omit(props, 'dispatch');
     if (children) {
@@ -151,7 +153,7 @@ const GUIComponent = props => {
                 vm={vm}
             >
                 {alertsVisible ? (
-                    <Alerts className={styles.alertsContainer} />
+                    <Alerts className={styles.alertsContainer}/>
                 ) : null}
             </StageWrapper>
         ) : (
@@ -160,6 +162,7 @@ const GUIComponent = props => {
                 dir={isRtl ? 'rtl' : 'ltr'}
                 {...componentProps}
             >
+                {userIsLogin ? null : (<LoginModal title={'登录'}/>)}
                 {telemetryModalVisible ? (
                     <TelemetryModal
                         isRtl={isRtl}
@@ -172,22 +175,22 @@ const GUIComponent = props => {
                     />
                 ) : null}
                 {loading ? (
-                    <Loader />
+                    <Loader/>
                 ) : null}
                 {isCreating ? (
-                    <Loader messageId="gui.loader.creating" />
+                    <Loader messageId="gui.loader.creating"/>
                 ) : null}
                 {isRendererSupported ? null : (
-                    <WebGlModal isRtl={isRtl} />
+                    <WebGlModal isRtl={isRtl}/>
                 )}
                 {tipsLibraryVisible ? (
-                    <TipsLibrary />
+                    <TipsLibrary/>
                 ) : null}
                 {cardsVisible ? (
-                    <Cards />
+                    <Cards/>
                 ) : null}
                 {alertsVisible ? (
-                    <Alerts className={styles.alertsContainer} />
+                    <Alerts className={styles.alertsContainer}/>
                 ) : null}
                 {connectionModalVisible ? (
                     <ConnectionModal
@@ -206,6 +209,7 @@ const GUIComponent = props => {
                         onRequestClose={onRequestCloseBackdropLibrary}
                     />
                 ) : null}
+
                 <MenuBar
                     accountNavOpen={accountNavOpen}
                     authorId={authorId}
@@ -236,6 +240,7 @@ const GUIComponent = props => {
                     onShare={onShare}
                     onStartSelectingFileUpload={onStartSelectingFileUpload}
                     onToggleLoginOpen={onToggleLoginOpen}
+                    userIsLogin={userIsLogin}
                 />
                 <Box className={styles.bodyWrapper}>
                     <Box className={styles.flexWrapper}>
@@ -324,18 +329,18 @@ const GUIComponent = props => {
                                         </button>
                                     </Box>
                                     <Box className={styles.watermark}>
-                                        <Watermark />
+                                        <Watermark/>
                                     </Box>
                                 </TabPanel>
                                 <TabPanel className={tabClassNames.tabPanel}>
-                                    {costumesTabVisible ? <CostumeTab vm={vm} /> : null}
+                                    {costumesTabVisible ? <CostumeTab vm={vm}/> : null}
                                 </TabPanel>
                                 <TabPanel className={tabClassNames.tabPanel}>
-                                    {soundsTabVisible ? <SoundTab vm={vm} /> : null}
+                                    {soundsTabVisible ? <SoundTab vm={vm}/> : null}
                                 </TabPanel>
                             </Tabs>
                             {backpackVisible ? (
-                                <Backpack host={backpackHost} />
+                                <Backpack host={backpackHost}/>
                             ) : null}
                         </Box>
 
@@ -356,7 +361,7 @@ const GUIComponent = props => {
                         </Box>
                     </Box>
                 </Box>
-                <DragLayer />
+                <DragLayer/>
             </Box>
         );
     }}</MediaQuery>);
@@ -423,13 +428,14 @@ GUIComponent.propTypes = {
     targetIsStage: PropTypes.bool,
     telemetryModalVisible: PropTypes.bool,
     tipsLibraryVisible: PropTypes.bool,
-    vm: PropTypes.instanceOf(VM).isRequired
+    vm: PropTypes.instanceOf(VM).isRequired,
+    userIsLogin: PropTypes.bool
 };
 GUIComponent.defaultProps = {
     backpackHost: null,
     backpackVisible: false,
     basePath: './',
-    canChangeLanguage: true,
+    canChangeLanguage: false,
     canCreateNew: false,
     canEditTitle: false,
     canManageFiles: true,
@@ -443,7 +449,8 @@ GUIComponent.defaultProps = {
     isShared: false,
     loading: false,
     showComingSoon: false,
-    stageSizeMode: STAGE_SIZE_MODES.large
+    stageSizeMode: STAGE_SIZE_MODES.large,
+    userIsLogin: false
 };
 
 const mapStateToProps = state => ({

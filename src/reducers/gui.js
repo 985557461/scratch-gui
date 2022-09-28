@@ -1,4 +1,4 @@
-import {applyMiddleware, compose, combineReducers} from 'redux';
+import {applyMiddleware, combineReducers, compose} from 'redux';
 import alertsReducer, {alertsInitialState} from './alerts';
 import assetDragReducer, {assetDragInitialState} from './asset-drag';
 import cardsReducer, {cardsInitialState} from './cards';
@@ -27,6 +27,7 @@ import vmReducer, {vmInitialState} from './vm';
 import vmStatusReducer, {vmStatusInitialState} from './vm-status';
 import workspaceMetricsReducer, {workspaceMetricsInitialState} from './workspace-metrics';
 import throttle from 'redux-throttle';
+import userStateReducer, {getUserInitState, userStateInitialState} from './user-state';
 
 import decks from '../lib/libraries/decks/index.jsx';
 
@@ -59,31 +60,45 @@ const guiInitialState = {
     toolbox: toolboxInitialState,
     vm: vmInitialState,
     vmStatus: vmStatusInitialState,
-    workspaceMetrics: workspaceMetricsInitialState
+    workspaceMetrics: workspaceMetricsInitialState,
+    userState: userStateInitialState
+};
+
+const initUserLoginState = function (currentState) {
+    return Object.assign(
+        {},
+        currentState,
+        {userState: getUserInitState()}
+    );
 };
 
 const initPlayer = function (currentState) {
     return Object.assign(
         {},
         currentState,
-        {mode: {
-            isFullScreen: currentState.mode.isFullScreen,
-            isPlayerOnly: true,
-            // When initializing in player mode, make sure to reset
-            // hasEverEnteredEditorMode
-            hasEverEnteredEditor: false
-        }}
+        {
+            mode: {
+                isFullScreen: currentState.mode.isFullScreen,
+                isPlayerOnly: true,
+                // When initializing in player mode, make sure to reset
+                // hasEverEnteredEditorMode
+                hasEverEnteredEditor: false
+            }
+        }
     );
 };
+
 const initFullScreen = function (currentState) {
     return Object.assign(
         {},
         currentState,
-        {mode: {
-            isFullScreen: true,
-            isPlayerOnly: currentState.mode.isPlayerOnly,
-            hasEverEnteredEditor: currentState.mode.hasEverEnteredEditor
-        }}
+        {
+            mode: {
+                isFullScreen: true,
+                isPlayerOnly: currentState.mode.isPlayerOnly,
+                hasEverEnteredEditor: currentState.mode.hasEverEnteredEditor
+            }
+        }
     );
 };
 
@@ -91,12 +106,14 @@ const initEmbedded = function (currentState) {
     return Object.assign(
         {},
         currentState,
-        {mode: {
-            showBranding: true,
-            isFullScreen: true,
-            isPlayerOnly: true,
-            hasEverEnteredEditor: false
-        }}
+        {
+            mode: {
+                showBranding: true,
+                isFullScreen: true,
+                isPlayerOnly: true,
+                hasEverEnteredEditor: false
+            }
+        }
     );
 };
 
@@ -158,7 +175,8 @@ const guiReducer = combineReducers({
     toolbox: toolboxReducer,
     vm: vmReducer,
     vmStatus: vmStatusReducer,
-    workspaceMetrics: workspaceMetricsReducer
+    workspaceMetrics: workspaceMetricsReducer,
+    userState: userStateReducer
 });
 
 export {
@@ -169,5 +187,6 @@ export {
     initFullScreen,
     initPlayer,
     initTelemetryModal,
-    initTutorialCard
+    initTutorialCard,
+    initUserLoginState
 };

@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Provider} from 'react-redux';
-import {createStore, combineReducers, compose} from 'redux';
+import {combineReducers, compose, createStore} from 'redux';
 import ConnectedIntlProvider from './connected-intl-provider.jsx';
 
 import localesReducer, {initLocale, localesInitialState} from '../reducers/locales';
 
-import {setPlayer, setFullScreen} from '../reducers/mode.js';
+import {setFullScreen, setPlayer} from '../reducers/mode.js';
 
 import locales from 'scratch-l10n';
 import {detectLocale} from './detect-locale';
@@ -51,7 +51,8 @@ const AppStateHOC = function (WrappedComponent, localesOnly) {
                     guiMiddleware,
                     initFullScreen,
                     initPlayer,
-                    initTelemetryModal
+                    initTelemetryModal,
+                    initUserLoginState
                 } = guiRedux;
                 const {ScratchPaintReducer} = require('scratch-paint');
 
@@ -66,6 +67,8 @@ const AppStateHOC = function (WrappedComponent, localesOnly) {
                 } else if (props.showTelemetryModal) {
                     initializedGui = initTelemetryModal(initializedGui);
                 }
+                // 更新用户初始化信息
+                initializedGui = initUserLoginState(initializedGui);
                 reducers = {
                     locales: localesReducer,
                     scratchGui: guiReducer,
@@ -84,6 +87,7 @@ const AppStateHOC = function (WrappedComponent, localesOnly) {
                 enhancer
             );
         }
+
         componentDidUpdate (prevProps) {
             if (localesOnly) return;
             if (prevProps.isPlayerOnly !== this.props.isPlayerOnly) {
@@ -93,6 +97,7 @@ const AppStateHOC = function (WrappedComponent, localesOnly) {
                 this.store.dispatch(setFullScreen(this.props.isFullScreen));
             }
         }
+
         render () {
             const {
                 isFullScreen, // eslint-disable-line no-unused-vars
@@ -111,6 +116,7 @@ const AppStateHOC = function (WrappedComponent, localesOnly) {
             );
         }
     }
+
     AppStateWrapper.propTypes = {
         isFullScreen: PropTypes.bool,
         isPlayerOnly: PropTypes.bool,

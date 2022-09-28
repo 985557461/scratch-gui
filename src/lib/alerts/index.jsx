@@ -18,6 +18,42 @@ const AlertLevels = {
 
 const alerts = [
     {
+        alertId: 'noLoginName',
+        alertType: AlertTypes.STANDARD,
+        clearList: ['noLoginName', 'createSuccess', 'creating', 'createCopySuccess', 'creatingCopy',
+            'createRemixSuccess', 'creatingRemix', 'saveSuccess', 'saving'],
+        content: ('请输入用户名'),
+        level: AlertLevels.WARN,
+        maxDisplaySecs: 2
+    },
+    {
+        alertId: 'noLoginPassword',
+        alertType: AlertTypes.STANDARD,
+        clearList: ['noLoginPassword', 'createSuccess', 'creating', 'createCopySuccess', 'creatingCopy',
+            'createRemixSuccess', 'creatingRemix', 'saveSuccess', 'saving'],
+        content: ('请输入密码'),
+        level: AlertLevels.WARN,
+        maxDisplaySecs: 2
+    },
+    {
+        alertId: 'loginUserNameError',
+        alertType: AlertTypes.STANDARD,
+        clearList: ['loginUserNameError', 'createSuccess', 'creating', 'createCopySuccess', 'creatingCopy',
+            'createRemixSuccess', 'creatingRemix', 'saveSuccess', 'saving'],
+        content: ('用户名不对'),
+        level: AlertLevels.WARN,
+        maxDisplaySecs: 2
+    },
+    {
+        alertId: 'loginPasswordError',
+        alertType: AlertTypes.STANDARD,
+        clearList: ['loginPasswordError', 'createSuccess', 'creating', 'createCopySuccess', 'creatingCopy',
+            'createRemixSuccess', 'creatingRemix', 'saveSuccess', 'saving'],
+        content: ('登录密码不对'),
+        level: AlertLevels.WARN,
+        maxDisplaySecs: 2
+    },
+    {
         alertId: 'createSuccess',
         alertType: AlertTypes.STANDARD,
         clearList: ['createSuccess', 'creating', 'createCopySuccess', 'creatingCopy',

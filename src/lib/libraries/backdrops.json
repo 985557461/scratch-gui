@@ -1,5 +1,17 @@
 [
     {
+        "name": "rabbit bg1",
+        "tags": [
+            "outdoors"
+        ],
+        "assetId": "3b1d83e40b5ef3f453806244d9c9612a",
+        "bitmapResolution": 2,
+        "dataFormat": "png",
+        "md5ext": "3b1d83e40b5ef3f453806244d9c9612a.png",
+        "rotationCenterX": 480,
+        "rotationCenterY": 360
+    },
+    {
         "name": "Arctic",
         "tags": [
             "outdoors",

@@ -69,7 +69,7 @@ const ModalComponent = props => (
                         styles.headerItemClose
                     )}
                 >
-                    {props.fullScreen ? (
+                    {props.showCloseButton ? props.fullScreen ? (
                         <Button
                             className={styles.backButton}
                             iconSrc={backIcon}
@@ -86,7 +86,7 @@ const ModalComponent = props => (
                             size={CloseButton.SIZE_LARGE}
                             onClick={props.onRequestClose}
                         />
-                    )}
+                    ) : null}
                 </div>
             </div>
             {props.children}
@@ -106,7 +106,12 @@ ModalComponent.propTypes = {
     headerImage: PropTypes.string,
     isRtl: PropTypes.bool,
     onHelp: PropTypes.func,
-    onRequestClose: PropTypes.func
+    onRequestClose: PropTypes.func,
+    showCloseButton: PropTypes.bool
+};
+
+ModalComponent.defaultProps = {
+    showCloseButton: true
 };
 
 export default ModalComponent;

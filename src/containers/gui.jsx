@@ -7,23 +7,10 @@ import VM from 'scratch-vm';
 import {injectIntl, intlShape} from 'react-intl';
 
 import ErrorBoundaryHOC from '../lib/error-boundary-hoc.jsx';
-import {
-    getIsError,
-    getIsShowingProject
-} from '../reducers/project-state';
-import {
-    activateTab,
-    BLOCKS_TAB_INDEX,
-    COSTUMES_TAB_INDEX,
-    SOUNDS_TAB_INDEX
-} from '../reducers/editor-tab';
+import {getIsError, getIsShowingProject} from '../reducers/project-state';
+import {activateTab, BLOCKS_TAB_INDEX, COSTUMES_TAB_INDEX, SOUNDS_TAB_INDEX} from '../reducers/editor-tab';
 
-import {
-    closeCostumeLibrary,
-    closeBackdropLibrary,
-    closeTelemetryModal,
-    openExtensionLibrary
-} from '../reducers/modals';
+import {closeBackdropLibrary, closeCostumeLibrary, closeTelemetryModal, openExtensionLibrary} from '../reducers/modals';
 
 import FontLoaderHOC from '../lib/font-loader-hoc.jsx';
 import LocalizationHOC from '../lib/localization-hoc.jsx';
@@ -39,6 +26,7 @@ import cloudManagerHOC from '../lib/cloud-manager-hoc.jsx';
 
 import GUIComponent from '../components/gui/gui.jsx';
 import {setIsScratchDesktop} from '../lib/isScratchDesktop.js';
+import {userIsLogin} from '../reducers/user-state';
 
 class GUI extends React.Component {
     componentDidMount () {
@@ -46,6 +34,7 @@ class GUI extends React.Component {
         this.props.onStorageInit(storage);
         this.props.onVmInit(this.props.vm);
     }
+
     componentDidUpdate (prevProps) {
         if (this.props.projectId !== prevProps.projectId && this.props.projectId !== null) {
             this.props.onUpdateProjectId(this.props.projectId);
@@ -56,6 +45,7 @@ class GUI extends React.Component {
             this.props.onProjectLoaded();
         }
     }
+
     render () {
         if (this.props.isError) {
             throw new Error(
@@ -113,19 +103,25 @@ GUI.propTypes = {
     projectHost: PropTypes.string,
     projectId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     telemetryModalVisible: PropTypes.bool,
-    vm: PropTypes.instanceOf(VM).isRequired
+    vm: PropTypes.instanceOf(VM).isRequired,
+    loginState: PropTypes.bool
 };
 
 GUI.defaultProps = {
     isScratchDesktop: false,
     onStorageInit: storageInstance => storageInstance.addOfficialScratchWebStores(),
-    onProjectLoaded: () => {},
-    onUpdateProjectId: () => {},
-    onVmInit: (/* vm */) => {}
+    onProjectLoaded: () => {
+    },
+    onUpdateProjectId: () => {
+    },
+    onVmInit: (/* vm */) => {
+    }
 };
 
 const mapStateToProps = state => {
     const loadingState = state.scratchGui.projectState.loadingState;
+    const loginState = state.scratchGui.userState.loginState;
+
     return {
         activeTabIndex: state.scratchGui.editorTab.activeTabIndex,
         alertsVisible: state.scratchGui.alerts.visible,
@@ -150,7 +146,8 @@ const mapStateToProps = state => {
         ),
         telemetryModalVisible: state.scratchGui.modals.telemetryModal,
         tipsLibraryVisible: state.scratchGui.modals.tipsLibrary,
-        vm: state.scratchGui.vm
+        vm: state.scratchGui.vm,
+        userIsLogin: userIsLogin(loginState)
     };
 };
 
@@ -166,7 +163,7 @@ const mapDispatchToProps = dispatch => ({
 
 const ConnectedGUI = injectIntl(connect(
     mapStateToProps,
-    mapDispatchToProps,
+    mapDispatchToProps
 )(GUI));
 
 // note that redux's 'compose' function is just being used as a general utility to make
